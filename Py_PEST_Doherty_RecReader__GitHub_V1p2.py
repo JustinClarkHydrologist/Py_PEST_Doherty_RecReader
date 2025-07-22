@@ -17,11 +17,11 @@ import matplotlib.pyplot as plt
 
 #
 ##EXTRACT THE NAME OF THE PEST RUN FROM THE COMMAND LINE ARGUMENT and assign it to the .rec file
-PESTcase = sys.argv[1]            ########PESTcase = "phx_rch_v3d_svda"
+PESTcase = sys.argv[1]            ########PESTcase = "PEST_Example_1"
 RECfile = PESTcase + ".rec"
 
 #
-##READ THE .rec and .rmr FILES USING READ_CSV
+##READ THE .rec and .rmr FILES USING pandas read_csv
 df = pd.read_csv(RECfile, delimiter = "/s", engine = 'python', header = None)
 ColNam = "RecOut"  ##This column that has the data I want to parse
 df.rename( columns={0 :ColNam}, inplace=True )
@@ -70,9 +70,8 @@ for i,location in enumerate(groups):
 ##CALCULATE THE NET PHI, NOT EXTRACTED MANUALLY, not used in the code
 df5['NetPhi'] = df5[list(df5.columns)].sum(axis=1)
 
-
 #
-##GRAPH IT UP!
+##Create new fields to hold the bottom elevation
 df5['YVals'] = pd.to_numeric(IterCnt*['0'])
 df5['Bot'] = pd.to_numeric(IterCnt*['0'])
 
@@ -80,6 +79,8 @@ ncol = 1
 if GrpCnt > 9: ncol = 2
 if GrpCnt > 20: ncol = 3
 
+#
+##GRAPH THE DATA
 for x in groups:
      df5['Bot'] = df5['YVals']
      df5['YVals'] = df5['Bot'] + df5[x]
